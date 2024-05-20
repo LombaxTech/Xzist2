@@ -10,7 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 const provider = new GoogleAuthProvider();
 
 export default function Navbar() {
-  const { user, userLoading } = useContext(AuthContext);
+  const { user, userLoading, userSetupComplete } = useContext(AuthContext);
   const router = useRouter();
 
   const signout = async () => {
@@ -48,8 +48,6 @@ export default function Navbar() {
       console.log(error);
     }
   };
-
-  const userSetupComplete = !(user?.setup === false);
 
   return (
     <div className="p-4 flex items-center justify-between shadow-md">
