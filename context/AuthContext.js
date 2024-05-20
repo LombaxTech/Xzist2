@@ -1,6 +1,7 @@
 import { app, db } from "@/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
 
 const auth = getAuth(app);
@@ -8,6 +9,7 @@ const auth = getAuth(app);
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
 
@@ -40,8 +42,17 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
+  const userSetupComplete = !(user?.setup === false);
+
+  const signout = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, userLoading }}>
+    <AuthContext.Provider
+      value={{ user, setUser, userLoading, userSetupComplete, signout }}
+    >
       {children}
     </AuthContext.Provider>
   );
