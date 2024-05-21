@@ -118,7 +118,9 @@ export default function CreateCustomerModal() {
 
                   <div className="flex flex-col gap-6 mt-4">
                     <div className="flex flex-col gap-1">
-                      <label className="">Name: </label>
+                      <label className="">
+                        {isCompany ? "Company Name:" : "Name:"}
+                      </label>
                       <input
                         type="text"
                         className="p-2 rounded-md border-2"
