@@ -31,7 +31,9 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
       {/* SIDE BAR */}
       <div className="max-h-screen w-[220px] bg-white border-r-2 flex flex-col">
         <div className="border-b-2">
-          <h1 className="text-2xl font-bold text-center m-4">XZIST</h1>
+          <Link href={"/"}>
+            <h1 className="text-2xl font-bold text-center m-4">XZIST</h1>
+          </Link>
         </div>
         <ul className="flex-1 overflow-y-auto">
           <Link
