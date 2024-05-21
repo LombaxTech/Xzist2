@@ -1,14 +1,16 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
+import { formatDate } from "@/lib/helperFunctions";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   addDoc,
   collection,
-  doc,
+  getDoc,
   getDocs,
   query,
-  updateDoc,
   where,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { Fragment, useContext, useEffect, useState } from "react";
 
@@ -20,14 +22,45 @@ export default function EditTaskModal({ task }: { task: any }) {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
+  const [organisation, setOrganisation] = useState<any>(null);
+  const [customers, setCustomers] = useState<any>([]);
+
+  useEffect(() => {
+    const init = async () => {
+      let customersQuery = query(
+        collection(db, "customers"),
+        where("createdBy.id", "==", user?.uid)
+      );
+
+      let snapshot = await getDocs(customersQuery);
+
+      let customers: any = [];
+      snapshot.forEach((doc: any) =>
+        customers.push({ id: doc.id, ...doc.data() })
+      );
+      setCustomers(customers);
+
+      let orgDoc = await getDoc(doc(db, "organisations", user.organisation.id));
+      setOrganisation({ id: orgDoc.id, ...orgDoc.data() });
+    };
+
+    if (user) init();
+  }, [user]);
+
   const [description, setDescription] = useState(task.description);
-  const [dueDate, setDueDate] = useState<any>(new Date(task.dueDate));
-  const [customer, setCustomer] = useState<any>(task.customer);
-  const [assignedTo, setAssignedTo] = useState<any>(task.assignedTo);
+  const [dueDate, setDueDate] = useState<any>(new Date(task.dueDate?.toDate()));
+  const [customerId, setCustomerId] = useState<any>(task.customer?.id);
+  const [assignedToId, setAssignedToId] = useState<any>(task.assignedTo?.id);
+  const [category, setCategory] = useState<any>(task.category);
 
   const saveChanges = async () => {
+    let assignedTo = organisation.users.find((u: any) => u.id === assignedToId);
+    let customer = customers.find((c: any) => c.id === customerId);
+
     const updatedTask = {
       description,
+      ...(assignedTo && { assignedTo }),
+      ...(customer && { customer }),
     };
 
     try {
@@ -35,6 +68,8 @@ export default function EditTaskModal({ task }: { task: any }) {
       closeModal();
 
       console.log("updated task");
+
+      setChangesExist(false);
     } catch (error) {
       console.log(error);
     }
@@ -43,12 +78,16 @@ export default function EditTaskModal({ task }: { task: any }) {
   const [changesExist, setChangesExist] = useState(false);
 
   useEffect(() => {
-    if (description !== task.description) {
+    if (
+      description !== task.description ||
+      assignedToId !== task.assignedTo?.id ||
+      customerId !== task.customer?.id
+    ) {
       setChangesExist(true);
     } else {
       setChangesExist(false);
     }
-  }, [description, dueDate, customer, assignedTo]);
+  }, [description, dueDate, customerId, assignedToId]);
 
   return (
     <>
@@ -104,25 +143,22 @@ export default function EditTaskModal({ task }: { task: any }) {
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </div>
-                    {/* <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1">
                       <label className="">Due Date: </label>
-                      <input
+                      {/* <input
                         type="date"
                         className="p-2 rounded-md border-2"
-                        value={dueDate}
+                        defaultValue={dueDate}
                         onChange={(e) => setDueDate(e.target.value)}
-                      />
-                    </div> */}
-                    {/* <div className="flex flex-col gap-1">
+                      /> */}
+                      <span className="">{formatDate(dueDate)}</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
                       <label className="">Customer: </label>
                       <select
+                        value={customerId}
                         className="outline-none border-2 p-2 rounded-md"
-                        onChange={(e) => {
-                          const customerId = e.target.value;
-                          setCustomer(
-                            customers.find((c: any) => c.id === customerId)
-                          );
-                        }}
+                        onChange={(e) => setCustomerId(e.target.value)}
                       >
                         <option>None</option>
                         {customers.map((customer: any, i: number) => {
@@ -133,16 +169,26 @@ export default function EditTaskModal({ task }: { task: any }) {
                           );
                         })}
                       </select>
-                    </div> */}
+                    </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Assigned To: </label>
-                      <input
-                        type="text"
-                        className="p-2 rounded-md border-2"
-                        placeholder=""
-                        value={assignedTo}
-                        onChange={(e) => setAssignedTo(e.target.value)}
-                      />
+                      <select
+                        className="outline-none border-2 p-2 rounded-md"
+                        value={assignedToId}
+                        onChange={(e) => setAssignedToId(e.target.value)}
+                      >
+                        <option></option>;
+                        {organisation?.users &&
+                          organisation?.users?.map(
+                            (orgUser: any, i: number) => {
+                              return (
+                                <option key={i} value={orgUser.id}>
+                                  {orgUser.name}
+                                </option>
+                              );
+                            }
+                          )}
+                      </select>
                     </div>
 
                     <button
