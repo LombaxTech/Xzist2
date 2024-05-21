@@ -171,14 +171,16 @@ export default function CreateTaskModal() {
                           );
                         }}
                       >
-                        {organisation.users &&
-                          organisation.users.map((orgUser: any, i: number) => {
-                            return (
-                              <option key={i} value={orgUser.id}>
-                                {orgUser.name}
-                              </option>
-                            );
-                          })}
+                        {organisation?.users &&
+                          organisation?.users?.map(
+                            (orgUser: any, i: number) => {
+                              return (
+                                <option key={i} value={orgUser.id}>
+                                  {orgUser.name}
+                                </option>
+                              );
+                            }
+                          )}
                       </select>
                     </div>
 
