@@ -165,17 +165,20 @@ export default function CreateTaskModal() {
                         onChange={(e) => {
                           const userId = e.target.value;
                           setAssignedTo(
-                            organisation.users.find((u: any) => u.id === userId)
+                            organisation?.users?.find(
+                              (u: any) => u.id === userId
+                            )
                           );
                         }}
                       >
-                        {organisation.users.map((orgUser: any, i: number) => {
-                          return (
-                            <option key={i} value={orgUser.id}>
-                              {orgUser.name}
-                            </option>
-                          );
-                        })}
+                        {organisation.users &&
+                          organisation.users.map((orgUser: any, i: number) => {
+                            return (
+                              <option key={i} value={orgUser.id}>
+                                {orgUser.name}
+                              </option>
+                            );
+                          })}
                       </select>
                     </div>
 
