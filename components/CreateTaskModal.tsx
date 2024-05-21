@@ -47,15 +47,20 @@ export default function CreateTaskModal() {
 
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<any>(null);
-  const [customer, setCustomer] = useState<any>(null);
-  const [assignedTo, setAssignedTo] = useState<any>(null);
+  const [customerId, setCustomerId] = useState<any>("");
+  const [assignedToId, setAssignedToId] = useState<any>("");
+  const [category, setCategory] = useState<any>(null);
 
   const createTask = async () => {
+    let customer = customers.find((c: any) => c.id === customerId);
+    let assignedTo = organisation.users.find((u: any) => u.id === assignedToId);
+
     const newTask = {
       description,
       dueDate: new Date(dueDate),
       customer,
       assignedTo,
+      category,
       createdAt: new Date(),
       createdBy: {
         id: user.uid,
@@ -140,12 +145,8 @@ export default function CreateTaskModal() {
                       <label className="">Customer: </label>
                       <select
                         className="outline-none border-2 p-2 rounded-md"
-                        onChange={(e) => {
-                          const customerId = e.target.value;
-                          setCustomer(
-                            customers.find((c: any) => c.id === customerId)
-                          );
-                        }}
+                        value={customerId}
+                        onChange={(e) => setCustomerId(e.target.value)}
                       >
                         <option>None</option>
                         {customers.map((customer: any, i: number) => {
@@ -162,15 +163,10 @@ export default function CreateTaskModal() {
                       <label className="">Assigned To: </label>
                       <select
                         className="outline-none border-2 p-2 rounded-md"
-                        onChange={(e) => {
-                          const userId = e.target.value;
-                          setAssignedTo(
-                            organisation?.users?.find(
-                              (u: any) => u.id === userId
-                            )
-                          );
-                        }}
+                        value={assignedToId}
+                        onChange={(e) => setAssignedToId(e.target.value)}
                       >
+                        <option>None</option>
                         {organisation?.users &&
                           organisation?.users?.map(
                             (orgUser: any, i: number) => {
@@ -187,17 +183,21 @@ export default function CreateTaskModal() {
                     {/* TASK CATEGORY */}
                     <div className="flex flex-col gap-1">
                       <label className="">Category: </label>
-                      <input
-                        type="text"
-                        className="p-2 rounded-md border-2"
-                        placeholder=""
-                        value={assignedTo}
-                        onChange={(e) => setAssignedTo(e.target.value)}
-                      />
+                      <select
+                        className="outline-none border-2 p-2 rounded-md"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                      >
+                        {organisation?.categories &&
+                          organisation?.categories?.map((c: any, i: number) => {
+                            return (
+                              <option key={i} value={c}>
+                                {c}
+                              </option>
+                            );
+                          })}
+                      </select>
                     </div>
-                    <h1 className="font-bold text-xs">
-                      Need to get customers as a drop down and assigned to
-                    </h1>
 
                     <button
                       className="btn btn-primary"
