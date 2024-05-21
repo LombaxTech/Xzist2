@@ -133,8 +133,13 @@ const OrganisationSettings = () => {
     return (
       <div className="flex flex-col gap-4 w-4/12 mt-8">
         <h2 className="text-xl font-medium">Organisation</h2>
+
         <div className="flex items-center gap-2">
           <label>Name: </label>
+          <span className="">{organisation.name}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <label>Passcode: </label>
           <span className="">{organisation.name}</span>
         </div>
         <label>Members: </label>
@@ -142,8 +147,8 @@ const OrganisationSettings = () => {
           {organisation?.users &&
             organisation?.users?.map((u: any, i: number) => {
               return (
-                <div className="p-2 border shadow-sm flex">
-                  <span className="">{user.name}</span>
+                <div className="p-2 border shadow-sm flex" key={i}>
+                  <span className="">{u.name}</span>
                 </div>
               );
             })}
