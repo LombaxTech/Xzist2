@@ -58,8 +58,8 @@ export default function CreateTaskModal() {
     const newTask = {
       description,
       dueDate: new Date(dueDate),
-      customer,
-      assignedTo,
+      ...(customer && { customer }),
+      ...(assignedTo && { assignedTo }),
       category,
       createdAt: new Date(),
       createdBy: {
