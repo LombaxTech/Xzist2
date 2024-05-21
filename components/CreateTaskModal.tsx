@@ -1,8 +1,8 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
 import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection } from "firebase/firestore";
-import { Fragment, useContext, useState } from "react";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { Fragment, useContext, useEffect, useState } from "react";
 
 export default function CreateTaskModal() {
   const { user } = useContext(AuthContext);
@@ -11,6 +11,27 @@ export default function CreateTaskModal() {
 
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
+
+  const [customers, setCustomers] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      let customersQuery = query(
+        collection(db, "customers"),
+        where("createdBy.id", "==", user.uid)
+      );
+
+      let snapshot = await getDocs(customersQuery);
+
+      let customers: any = [];
+      snapshot.forEach((doc: any) =>
+        customers.push({ id: doc.id, ...doc.data() })
+      );
+      setCustomers(customers);
+    };
+
+    fetchCustomers();
+  }, []);
 
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -23,7 +44,6 @@ export default function CreateTaskModal() {
       dueDate,
       customer,
       assignedTo,
-
       createdAt: new Date(),
       createdBy: {
         id: user.uid,
@@ -84,6 +104,10 @@ export default function CreateTaskModal() {
                     </h1>
                   </div>
 
+                  <button className="btn" onClick={() => console.log(customer)}>
+                    Log customer
+                  </button>
+
                   <div className="flex flex-col gap-6 mt-4">
                     <div className="flex flex-col gap-1">
                       <label className="">Description: </label>
@@ -106,13 +130,24 @@ export default function CreateTaskModal() {
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Customer: </label>
-                      <input
-                        type="text"
-                        className="p-2 rounded-md border-2"
-                        placeholder=""
-                        value={customer}
-                        onChange={(e) => setCustomer(e.target.value)}
-                      />
+                      <select
+                        className="outline-none border-2 p-2 rounded-md"
+                        onChange={(e) => {
+                          const customerId = e.target.value;
+                          setCustomer(
+                            customers.find((c: any) => c.id === customerId)
+                          );
+                        }}
+                      >
+                        <option>None</option>
+                        {customers.map((customer: any, i: number) => {
+                          return (
+                            <option key={i} value={customer.id}>
+                              {customer.name}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Assigned To: </label>
