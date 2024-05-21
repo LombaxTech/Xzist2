@@ -24,3 +24,24 @@ export function formatDate(date: any) {
     return `${day}-${month}-${year}`;
   }
 }
+
+export function generatePassword(length: number): string {
+  const uppercase: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lowercase: string = "abcdefghijklmnopqrstuvwxyz";
+  const digits: string = "0123456789";
+  const specialChars: string = "!@#$%^&*()_+[]{}|;:,.<>?";
+
+  const allChars: string = uppercase + lowercase + digits + specialChars;
+  let password: string = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex: number = Math.floor(Math.random() * allChars.length);
+    password += allChars[randomIndex];
+  }
+
+  return password;
+}
+
+// Example usage:
+const password: string = generatePassword(12);
+console.log(password);
