@@ -1,19 +1,26 @@
 import CreateCustomerModal from "@/components/CreateCustomerModal";
 import SidebarPageLayout from "@/components/SidebarPageLayout";
+import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function CustomersHome() {
   const router = useRouter();
+  const { user } = useContext(AuthContext);
 
   const [customers, setCustomers] = useState<any>([]);
+  const [mode, setMode] = useState<"individual" | "company">("individual");
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      let customersRef = collection(db, "customers");
-      onSnapshot(customersRef, (snapshot: any) => {
+      let customersQuery = query(
+        collection(db, "customers"),
+        where("createdBy.id", "==", user.uid)
+      );
+
+      onSnapshot(customersQuery, (snapshot: any) => {
         let customers: any = [];
         snapshot.forEach((doc: any) =>
           customers.push({ id: doc.id, ...doc.data() })
@@ -34,7 +41,18 @@ export default function CustomersHome() {
       </div>
 
       {/* TABLE OF CUSTOMERS */}
-      <div className="overflow-x-auto mt-16">
+      <div className="mt-16 mb-4">
+        <select
+          className="border-2 p-2"
+          value={mode}
+          // @ts-ignore
+          onChange={(e) => setMode(e.target.value)}
+        >
+          <option value={"individual"}>Individual</option>
+          <option value={"company"}>Company</option>
+        </select>
+      </div>
+      <div className="overflow-x-auto">
         <table className="table">
           <thead>
             <tr>
@@ -46,6 +64,11 @@ export default function CustomersHome() {
           <tbody>
             {customers &&
               customers.map((customer: any, i: number) => {
+                if (mode === "individual" && customer.type !== "individual")
+                  return null;
+                if (mode === "company" && customer.type !== "company")
+                  return null;
+
                 return (
                   <tr
                     key={i}
