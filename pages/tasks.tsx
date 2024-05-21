@@ -8,20 +8,20 @@ import React, { useEffect, useState } from "react";
 export default function Tasks() {
   const [tasks, setTasks] = useState<any>([]);
 
-  useEffect(() => {
-    const init = async () => {
-      let tasksRef = collection(db, "tasks");
-      onSnapshot(tasksRef, (snapshot: any) => {
-        let tasks: any = [];
-        snapshot.forEach((doc: any) =>
-          tasks.push({ id: doc.id, ...doc.data() })
-        );
-        setTasks(tasks);
-      });
-    };
+  // useEffect(() => {
+  //   const init = async () => {
+  //     let tasksRef = collection(db, "tasks");
+  //     onSnapshot(tasksRef, (snapshot: any) => {
+  //       let tasks: any = [];
+  //       snapshot.forEach((doc: any) =>
+  //         tasks.push({ id: doc.id, ...doc.data() })
+  //       );
+  //       setTasks(tasks);
+  //     });
+  //   };
 
-    init();
-  }, []);
+  //   init();
+  // }, []);
 
   return (
     <SidebarPageLayout>
@@ -46,7 +46,7 @@ export default function Tasks() {
                   className="p-2 shadow-md flex items-center justify-between"
                 >
                   <span className="">{task?.description}</span>
-                  {/* <EditTaskModal task={task} /> */}
+                  <EditTaskModal task={task} />
                 </div>
               );
             })}
