@@ -1,7 +1,15 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
 import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+} from "firebase/firestore";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 export default function CreateTaskModal() {
@@ -12,10 +20,11 @@ export default function CreateTaskModal() {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
+  const [organisation, setOrganisation] = useState<any>(null);
   const [customers, setCustomers] = useState<any>([]);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
+    const init = async () => {
       let customersQuery = query(
         collection(db, "customers"),
         where("createdBy.id", "==", user?.uid)
@@ -28,9 +37,12 @@ export default function CreateTaskModal() {
         customers.push({ id: doc.id, ...doc.data() })
       );
       setCustomers(customers);
+
+      let orgDoc = await getDoc(doc(db, "organisations", user.organisation.id));
+      setOrganisation({ id: orgDoc.id, ...orgDoc.data() });
     };
 
-    if (user) fetchCustomers();
+    if (user) init();
   }, [user]);
 
   const [description, setDescription] = useState("");
@@ -123,6 +135,7 @@ export default function CreateTaskModal() {
                         onChange={(e) => setDueDate(e.target.value)}
                       />
                     </div>
+                    {/* CUSTOMER TASK IS FOR */}
                     <div className="flex flex-col gap-1">
                       <label className="">Customer: </label>
                       <select
@@ -144,8 +157,31 @@ export default function CreateTaskModal() {
                         })}
                       </select>
                     </div>
+                    {/* ORGANISATION USER TASK IS FOR */}
                     <div className="flex flex-col gap-1">
                       <label className="">Assigned To: </label>
+                      <select
+                        className="outline-none border-2 p-2 rounded-md"
+                        onChange={(e) => {
+                          const userId = e.target.value;
+                          setAssignedTo(
+                            organisation.users.find((u: any) => u.id === userId)
+                          );
+                        }}
+                      >
+                        {organisation.users.map((orgUser: any, i: number) => {
+                          return (
+                            <option key={i} value={orgUser.id}>
+                              {orgUser.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    {/* TASK CATEGORY */}
+                    <div className="flex flex-col gap-1">
+                      <label className="">Category: </label>
                       <input
                         type="text"
                         className="p-2 rounded-md border-2"
