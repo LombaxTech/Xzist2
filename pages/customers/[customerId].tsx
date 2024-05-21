@@ -60,6 +60,7 @@ export default function CustomerPage() {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>Type</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +68,9 @@ export default function CustomerPage() {
                 <td>{customer.name}</td>
                 <td>{customer.email}</td>
                 <td>{customer.phoneNumber}</td>
+                <td>
+                  {customer.type === "individual" ? "Individual" : "Company"}
+                </td>
               </tr>
             </tbody>
           </table>
