@@ -18,7 +18,7 @@ export default function CreateTaskModal() {
     const fetchCustomers = async () => {
       let customersQuery = query(
         collection(db, "customers"),
-        where("createdBy.id", "==", user.uid)
+        where("createdBy.id", "==", user?.uid)
       );
 
       let snapshot = await getDocs(customersQuery);
@@ -30,18 +30,18 @@ export default function CreateTaskModal() {
       setCustomers(customers);
     };
 
-    fetchCustomers();
-  }, []);
+    if (user) fetchCustomers();
+  }, [user]);
 
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState<any>(null);
   const [customer, setCustomer] = useState<any>(null);
   const [assignedTo, setAssignedTo] = useState<any>(null);
 
   const createTask = async () => {
     const newTask = {
       description,
-      dueDate,
+      dueDate: new Date(dueDate),
       customer,
       assignedTo,
       createdAt: new Date(),
@@ -104,10 +104,6 @@ export default function CreateTaskModal() {
                     </h1>
                   </div>
 
-                  <button className="btn" onClick={() => console.log(customer)}>
-                    Log customer
-                  </button>
-
                   <div className="flex flex-col gap-6 mt-4">
                     <div className="flex flex-col gap-1">
                       <label className="">Description: </label>
@@ -121,9 +117,8 @@ export default function CreateTaskModal() {
                     <div className="flex flex-col gap-1">
                       <label className="">Due Date: </label>
                       <input
-                        type="text"
+                        type="date"
                         className="p-2 rounded-md border-2"
-                        placeholder=""
                         value={dueDate}
                         onChange={(e) => setDueDate(e.target.value)}
                       />
