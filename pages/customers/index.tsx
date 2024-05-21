@@ -17,7 +17,7 @@ export default function CustomersHome() {
     const fetchCustomers = async () => {
       let customersQuery = query(
         collection(db, "customers"),
-        where("createdBy.id", "==", user.uid)
+        where("createdBy.id", "==", user?.uid)
       );
 
       onSnapshot(customersQuery, (snapshot: any) => {
@@ -29,8 +29,8 @@ export default function CustomersHome() {
       });
     };
 
-    fetchCustomers();
-  }, []);
+    if (user) fetchCustomers();
+  }, [user]);
 
   return (
     <SidebarPageLayout>
