@@ -12,21 +12,42 @@ export default function CreateCustomerModal() {
   const closeModal = () => setCreateCustomerModalOpen(false);
   const openModal = () => setCreateCustomerModalOpen(true);
 
+  const [mode, setMode] = useState<"individual" | "company">("individual");
+  const isIndividual = mode === "individual";
+  const isCompany = mode === "company";
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const createCustomer = async () => {
-    const newCustomer = {
-      name,
-      email,
-      phoneNumber,
-      type: "individual",
-      createdAt: new Date(),
-      createdBy: {
-        id: user.uid,
-      },
-    };
+    let newCustomer: any;
+
+    if (mode === "individual") {
+      newCustomer = {
+        name,
+        email,
+        phoneNumber,
+        type: mode,
+        createdAt: new Date(),
+        createdBy: {
+          id: user.uid,
+        },
+      };
+    }
+
+    if (mode === "company") {
+      newCustomer = {
+        name,
+        email,
+        phoneNumber,
+        type: mode,
+        createdAt: new Date(),
+        createdBy: {
+          id: user.uid,
+        },
+      };
+    }
 
     try {
       await addDoc(collection(db, "customers"), newCustomer);
@@ -78,9 +99,21 @@ export default function CreateCustomerModal() {
                     <h1 className="text-lg font-medium leading-6 text-gray-900">
                       Create Customer
                     </h1>
-                    <span className="cursor-pointer underline">
-                      Switch to company customer
-                    </span>
+                    {mode === "individual" ? (
+                      <span
+                        className="cursor-pointer underline"
+                        onClick={() => setMode("company")}
+                      >
+                        Switch to company customer
+                      </span>
+                    ) : (
+                      <span
+                        className="cursor-pointer underline"
+                        onClick={() => setMode("individual")}
+                      >
+                        Switch to individual customer
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-6 mt-4">
