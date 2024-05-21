@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: any }) {
 
   // SIDEBAR LAYOUT IF USER IS SIGNED IN
   if (user && userSetupComplete)
-    return <UserSetupCompleteLayout children={children} />;
+    return <UserSetupCompleteLayout>{children}</UserSetupCompleteLayout>;
 
   return (
     <div className="flex flex-col min-h-screen">
