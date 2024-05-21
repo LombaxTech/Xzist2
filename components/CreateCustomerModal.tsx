@@ -1,8 +1,17 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
 import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection } from "firebase/firestore";
-import { Fragment, useContext, useState } from "react";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { Fragment, useContext, useEffect, useState } from "react";
 
 export default function CreateCustomerModal() {
   const { user } = useContext(AuthContext);
@@ -12,6 +21,27 @@ export default function CreateCustomerModal() {
   const closeModal = () => setCreateCustomerModalOpen(false);
   const openModal = () => setCreateCustomerModalOpen(true);
 
+  const [customers, setCustomers] = useState<any>([]);
+
+  useEffect(() => {
+    const init = async () => {
+      let customersQuery = query(
+        collection(db, "customers"),
+        where("createdBy.id", "==", user?.uid)
+      );
+
+      let snapshot = await getDocs(customersQuery);
+
+      let customers: any = [];
+      snapshot.forEach((doc: any) =>
+        customers.push({ id: doc.id, ...doc.data() })
+      );
+      setCustomers(customers);
+    };
+
+    if (user) init();
+  }, [user]);
+
   const [mode, setMode] = useState<"individual" | "company">("individual");
   const isIndividual = mode === "individual";
   const isCompany = mode === "company";
@@ -19,6 +49,7 @@ export default function CreateCustomerModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [companyId, setCompanyId] = useState("");
 
   const createCustomer = async () => {
     let newCustomer: any;
@@ -33,6 +64,7 @@ export default function CreateCustomerModal() {
         createdBy: {
           id: user.uid,
         },
+        ...(companyId && { companyId }),
       };
     }
 
@@ -50,8 +82,21 @@ export default function CreateCustomerModal() {
     }
 
     try {
-      await addDoc(collection(db, "customers"), newCustomer);
+      let customerDoc = await addDoc(collection(db, "customers"), newCustomer);
+
+      if (companyId) {
+        await updateDoc(doc(db, "customers", companyId), {
+          users: arrayUnion({
+            id: customerDoc.id,
+            name,
+            email,
+            phoneNumber,
+          }),
+        });
+      }
+
       console.log("made new customer");
+
       closeModal();
     } catch (error) {
       console.log(error);
@@ -149,6 +194,29 @@ export default function CreateCustomerModal() {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     </div>
+
+                    {isIndividual && (
+                      <div className="flex flex-col gap-1">
+                        <label className="">Company: </label>
+                        <select
+                          className="p-2 border-2 rounded-md"
+                          value={companyId}
+                          onChange={(e) => setCompanyId(e.target.value)}
+                        >
+                          <option></option>
+                          {customers &&
+                            customers.map((customer: any, i: number) => {
+                              if (customer.type === "individual") return null;
+
+                              return (
+                                <option value={customer.id}>
+                                  {customer.name}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      </div>
+                    )}
 
                     <button
                       className="btn btn-primary"
