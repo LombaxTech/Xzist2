@@ -1,8 +1,9 @@
 import { AuthContext } from "@/context/AuthContext";
 import React, { useContext, useState } from "react";
 import Navbar from "./Navbar";
-import { FaTasks } from "react-icons/fa";
+import { FaHome, FaTasks, FaTools, FaUser } from "react-icons/fa";
 import Link from "next/link";
+import { FaGear, FaGears, FaPencil } from "react-icons/fa6";
 
 export default function Layout({ children }: { children: any }) {
   const { user, userLoading, userSetupComplete, signout } =
@@ -40,14 +41,14 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
             href={"/"}
             className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
           >
-            <FaTasks size={20} />
+            <FaHome size={20} />
             <span className="">Dashboard</span>
           </Link>
           <Link
             href={"/tasks"}
             className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
           >
-            <FaTasks size={20} />
+            <FaPencil size={20} />
             <span className="">Tasks</span>
           </Link>
           <div
@@ -59,7 +60,7 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
               href={"/customers"}
               className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
             >
-              <FaTasks size={20} />
+              <FaUser size={20} />
               <span className="">Customers</span>
             </Link>
             {/* <div
@@ -83,6 +84,13 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
               </Link>
             </div> */}
           </div>
+          <Link
+            href={"/settings"}
+            className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
+          >
+            <FaGear size={20} />
+            <span className="">Settings</span>
+          </Link>
         </ul>
 
         <div
