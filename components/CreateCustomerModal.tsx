@@ -219,7 +219,7 @@ export default function CreateCustomerModal() {
                               if (customer.type === "individual") return null;
 
                               return (
-                                <option value={customer.id}>
+                                <option key={i} value={customer.id}>
                                   {customer.name}
                                 </option>
                               );

@@ -79,7 +79,11 @@ export default function Tasks() {
                   <option>All</option>
                   {org?.categories &&
                     org?.categories.map((category: any, i: number) => {
-                      return <option value={category}>{category}</option>;
+                      return (
+                        <option key={i} value={category}>
+                          {category}
+                        </option>
+                      );
                     })}
                 </select>
               </div>
@@ -94,7 +98,11 @@ export default function Tasks() {
                 <option>All</option>
                 {customers &&
                   customers.map((customer: any, i: number) => {
-                    return <option value={customer.id}>{customer.name}</option>;
+                    return (
+                      <option key={i} value={customer.id}>
+                        {customer.name}
+                      </option>
+                    );
                   })}
               </select>
             </div>
@@ -109,7 +117,11 @@ export default function Tasks() {
                   <option>All</option>
                   {org?.users &&
                     org?.users.map((u: any, i: number) => {
-                      return <option value={u.id}>{u.name}</option>;
+                      return (
+                        <option key={i} value={u.id}>
+                          {u.name}
+                        </option>
+                      );
                     })}
                 </select>
               </div>
