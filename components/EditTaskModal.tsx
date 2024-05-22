@@ -1,6 +1,10 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
-import { formatDate } from "@/lib/helperFunctions";
+import {
+  areDatesEqual,
+  formatDate,
+  formatDateAsInputValue,
+} from "@/lib/helperFunctions";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   addDoc,
@@ -81,7 +85,8 @@ export default function EditTaskModal({ task }: { task: any }) {
     if (
       description !== task.description ||
       assignedToId !== task.assignedTo?.id ||
-      customerId !== task.customer?.id
+      customerId !== task.customer?.id ||
+      !areDatesEqual(new Date(dueDate), new Date(task.dueDate.toDate()))
     ) {
       setChangesExist(true);
     } else {
@@ -145,13 +150,15 @@ export default function EditTaskModal({ task }: { task: any }) {
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Due Date: </label>
-                      {/* <input
+                      <input
                         type="date"
                         className="p-2 rounded-md border-2"
-                        defaultValue={dueDate}
+                        defaultValue={formatDateAsInputValue(
+                          new Date(task.dueDate.toDate())
+                        )}
                         onChange={(e) => setDueDate(e.target.value)}
-                      /> */}
-                      <span className="">{formatDate(dueDate)}</span>
+                      />
+                      {/* <span className="">{formatDate(dueDate)}</span> */}
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Customer: </label>
