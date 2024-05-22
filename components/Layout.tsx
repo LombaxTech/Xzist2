@@ -37,13 +37,13 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           </Link>
         </div>
         <ul className="flex-1 overflow-y-auto">
-          <Link
+          {/* <Link
             href={"/"}
             className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
           >
             <FaHome size={20} />
             <span className="">Dashboard</span>
-          </Link>
+          </Link> */}
           <Link
             href={"/tasks"}
             className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
