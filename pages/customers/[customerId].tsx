@@ -10,8 +10,10 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 export default function CustomerPage() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function CustomerPage() {
 
   const [customer, setCustomer] = useState<any>(null);
   const [notes, setNotes] = useState<any>([]);
+  const [company, setCompany] = useState<any>(null);
 
   useEffect(() => {
     if (!customerId) return;
@@ -29,6 +32,15 @@ export default function CustomerPage() {
         doc(db, "customers", customerId as string)
       );
       setCustomer({ id: customerDoc.id, ...customerDoc.data() });
+
+      let customer = customerDoc.data();
+
+      if (customer?.type === "individual" && customer?.companyId) {
+        let companyDoc = await getDoc(
+          doc(db, "customers", customer?.companyId as string)
+        );
+        setCompany({ id: companyDoc.id, ...companyDoc.data() });
+      }
 
       let notesQuery = query(
         collection(db, "notes"),
@@ -45,6 +57,8 @@ export default function CustomerPage() {
     init();
   }, [customerId]);
 
+  const isCompany = customer?.type === "company";
+
   if (customerId && customer)
     return (
       <SidebarPageLayout>
@@ -53,7 +67,7 @@ export default function CustomerPage() {
           <AddCustomerNodeModal customerId={customerId as string} />
         </div>
         {/* TABLE OF CUSTOMER BASIC INFO */}
-        <div className="overflow-x-auto mt-6">
+        <div className="overflow-x-auto mt-6 mb-6">
           <table className="table">
             <thead>
               <tr>
@@ -76,8 +90,49 @@ export default function CustomerPage() {
           </table>
         </div>
 
+        {/* COMAPNY INFO IF CUSTOMER IS INDIVIDUAL */}
+        {!isCompany && (
+          <>
+            {company ? (
+              <div className="flex flex-col gap-4">
+                <h1 className="text-xl font-medium">Company Name:</h1>
+                <Link href={`/customers/${company.id}`}>
+                  <span className="flex items-center gap-2">
+                    <span>{company.name}</span>
+                    <FaExternalLinkAlt size={15} />
+                  </span>
+                </Link>
+              </div>
+            ) : (
+              "Customer does not belong to a company"
+            )}
+          </>
+        )}
+
+        {/* USERS INFO IF CUSTOMER IS COMPANY */}
+        {isCompany && (
+          <div className="flex flex-col gap-2">
+            <h1 className="text-xl font-medium">Company Members</h1>
+            <div className="flex flex-col gap-1">
+              {customer?.users &&
+                customer?.users?.map((u: any, i: number) => {
+                  return (
+                    <div key={i} className="p-2">
+                      <Link href={`/customers/${u.id}`}>
+                        <span className="flex items-center gap-2">
+                          <span>{u.name}</span>
+                          <FaExternalLinkAlt size={15} />
+                        </span>
+                      </Link>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+
         {/* NOTES ON CUSTOMER */}
-        <h1 className="text-xl font-medium mt-8 mb-4">Notes</h1>
+        <h1 className="text-xl font-medium mt-4 mb-4">Notes</h1>
         <div className="flex flex-col gap-2">
           {notes &&
             notes.map((note: any, i: number) => {
