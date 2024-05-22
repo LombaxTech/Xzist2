@@ -29,7 +29,7 @@ export default function EditTaskModal({ task }: { task: any }) {
     const init = async () => {
       let customersQuery = query(
         collection(db, "customers"),
-        where("createdBy.id", "==", user?.uid)
+        where("createdBy.organisation.id", "==", user?.organisation?.id)
       );
 
       let snapshot = await getDocs(customersQuery);

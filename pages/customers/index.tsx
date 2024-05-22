@@ -17,7 +17,7 @@ export default function CustomersHome() {
     const fetchCustomers = async () => {
       let customersQuery = query(
         collection(db, "customers"),
-        where("createdBy.id", "==", user?.uid)
+        where("createdBy.organisation.id", "==", user?.organisation?.id)
       );
 
       onSnapshot(customersQuery, (snapshot: any) => {

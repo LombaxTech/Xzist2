@@ -42,7 +42,7 @@ export default function Tasks() {
       // GET CUSTOMERS
       let customersQuery = query(
         collection(db, "customers"),
-        where("createdBy.id", "==", user.uid)
+        where("createdBy.organisation.id", "==", user?.organisation?.id)
       );
       let snapshot = await getDocs(customersQuery);
       let customers: any = [];
