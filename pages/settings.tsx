@@ -140,7 +140,7 @@ const OrganisationSettings = () => {
         </div>
         <div className="flex items-center gap-2">
           <label>Passcode: </label>
-          <span className="">{organisation.name}</span>
+          <span className="">{organisation.passcode}</span>
         </div>
         <label>Members: </label>
         <div className="flex flex-col gap-1">

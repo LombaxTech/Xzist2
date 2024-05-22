@@ -116,14 +116,14 @@ export default function Tasks() {
             )}
           </div>
           <button
-            className="btn"
+            className="btn btn-outline btn-sm mt-4"
             onClick={() => {
-              console.log(`selected customer id: ${selectedCustomerId}`);
-              console.log(`selected assignedto id: ${selectedAssignedToId}`);
-              console.log(`selected category: ${selectedCategory}`);
+              setSelectedCategory("All");
+              setSelectedCustomerId("All");
+              setSelectedAssignedToId("All");
             }}
           >
-            Log
+            Clear
           </button>
         </div>
 
