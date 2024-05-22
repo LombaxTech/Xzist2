@@ -24,7 +24,12 @@ export default function AddCustomerNodeModal({
       text,
       createdAt: new Date(),
       createdBy: {
-        id: user.uid,
+        user: {
+          id: user.uid,
+        },
+        organisation: {
+          id: user.organisation.id,
+        },
       },
       customerId,
     };

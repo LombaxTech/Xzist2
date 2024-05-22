@@ -62,7 +62,12 @@ export default function CreateCustomerModal() {
         type: mode,
         createdAt: new Date(),
         createdBy: {
-          id: user.uid,
+          user: {
+            id: user.uid,
+          },
+          organisation: {
+            id: user.organisation.id,
+          },
         },
         ...(companyId && { companyId }),
       };
@@ -76,7 +81,12 @@ export default function CreateCustomerModal() {
         type: mode,
         createdAt: new Date(),
         createdBy: {
-          id: user.uid,
+          user: {
+            id: user.uid,
+          },
+          organisation: {
+            id: user.organisation.id,
+          },
         },
       };
     }

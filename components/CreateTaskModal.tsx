@@ -63,7 +63,12 @@ export default function CreateTaskModal() {
       category,
       createdAt: new Date(),
       createdBy: {
-        id: user.uid,
+        user: {
+          id: user.uid,
+        },
+        organisation: {
+          id: user.organisation.id,
+        },
       },
     };
 
