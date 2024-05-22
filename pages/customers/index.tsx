@@ -32,6 +32,8 @@ export default function CustomersHome() {
     if (user) fetchCustomers();
   }, [user]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <SidebarPageLayout>
       {/* TITLE + CREATE CUSTOMER MODAL */}
@@ -41,16 +43,25 @@ export default function CustomersHome() {
       </div>
 
       {/* TABLE OF CUSTOMERS */}
-      <div className="mt-16 mb-4">
-        <select
-          className="border-2 p-2"
-          value={mode}
-          // @ts-ignore
-          onChange={(e) => setMode(e.target.value)}
-        >
-          <option value={"individual"}>Individual</option>
-          <option value={"company"}>Company</option>
-        </select>
+      <div className="mt-4 mb-4">
+        <div className="flex items-center gap-4">
+          <select
+            className="border-2 p-2"
+            value={mode}
+            // @ts-ignore
+            onChange={(e) => setMode(e.target.value)}
+          >
+            <option value={"individual"}>Individual</option>
+            <option value={"company"}>Company</option>
+          </select>
+          <input
+            type="text"
+            className="p-2 rounded-md shadow-sm border"
+            placeholder="Search for a customer..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="table">
@@ -67,6 +78,14 @@ export default function CustomersHome() {
                 if (mode === "individual" && customer.type !== "individual")
                   return null;
                 if (mode === "company" && customer.type !== "company")
+                  return null;
+
+                if (
+                  searchTerm !== "" &&
+                  !customer.name.includes(searchTerm) &&
+                  !customer.email.includes(searchTerm) &&
+                  !customer.phoneNumber.includes(searchTerm)
+                )
                   return null;
 
                 return (
