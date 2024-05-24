@@ -45,6 +45,7 @@ export default function CreateTaskModal() {
     if (user) init();
   }, [user]);
 
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<any>(null);
   const [customerId, setCustomerId] = useState<any>("");
@@ -56,11 +57,13 @@ export default function CreateTaskModal() {
     let assignedTo = organisation.users.find((u: any) => u.id === assignedToId);
 
     const newTask = {
+      title,
       description,
       dueDate: new Date(dueDate),
       ...(customer && { customer }),
       ...(assignedTo && { assignedTo }),
       category,
+      complete: false,
       createdAt: new Date(),
       createdBy: {
         user: {
@@ -127,6 +130,16 @@ export default function CreateTaskModal() {
                   </div>
 
                   <div className="flex flex-col gap-6 mt-4">
+                    <div className="flex flex-col gap-1">
+                      <label className="">Title: </label>
+                      <input
+                        type="text"
+                        className="p-2 rounded-md border-2"
+                        placeholder=""
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </div>
                     <div className="flex flex-col gap-1">
                       <label className="">Description: </label>
                       <textarea
