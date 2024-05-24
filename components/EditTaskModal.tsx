@@ -94,6 +94,15 @@ export default function EditTaskModal({ task }: { task: any }) {
     }
   }, [description, dueDate, customerId, assignedToId]);
 
+  const toggleComplete = async () => {
+    await updateDoc(doc(db, "tasks", task.id), {
+      complete: isTaskComplete ? false : true,
+    });
+    closeModal();
+  };
+
+  let isTaskComplete = task.complete ? true : false;
+
   return (
     <>
       <h3 className="cursor-pointer underline" onClick={openModal}>
@@ -198,13 +207,24 @@ export default function EditTaskModal({ task }: { task: any }) {
                       </select>
                     </div>
 
-                    <button
-                      className="btn btn-primary"
-                      onClick={saveChanges}
-                      disabled={!changesExist}
-                    >
-                      Save
-                    </button>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className="btn btn-primary"
+                        onClick={toggleComplete}
+                      >
+                        {isTaskComplete
+                          ? "Mark as incomplete"
+                          : "Mark as completed"}
+                      </button>
+
+                      <button
+                        className="btn btn-primary"
+                        onClick={saveChanges}
+                        disabled={!changesExist}
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
