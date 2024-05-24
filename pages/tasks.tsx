@@ -3,6 +3,7 @@ import EditTaskModal from "@/components/EditTaskModal";
 import SidebarPageLayout from "@/components/SidebarPageLayout";
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
+import { formatDate } from "@/lib/helperFunctions";
 import {
   collection,
   getDoc,
@@ -139,7 +140,7 @@ export default function Tasks() {
           </button>
         </div>
 
-        <div className="flex-1 flex flex-col gap-2">
+        <div className="flex-1 flex flex-col gap-4">
           {tasks.length === 0 ? "No Tasks" : ""}
           {tasks &&
             tasks.map((task: any, i: number) => {
@@ -164,9 +165,25 @@ export default function Tasks() {
               return (
                 <div
                   key={i}
-                  className="p-2 shadow-md flex items-center justify-between"
+                  className="p-2 shadow-md flex items-center border-l-primary border-l-8"
                 >
-                  <span className="">{task.description}</span>
+                  <input disabled type="checkbox" className="mx-6" />
+                  <div className="flex flex-col flex-1">
+                    <span className="font-medium text-lg">
+                      Todo: {task.title}
+                    </span>
+                    <span className="">{task.description}</span>
+                  </div>
+                  <div className="flex flex-col w-2/12">
+                    <span className="font-medium text-lg">Assigned To: </span>
+                    <span className="">{task.assignedTo.name}</span>
+                  </div>
+                  <div className="flex flex-col w-2/12">
+                    <span className="font-medium text-lg">Complete By: </span>
+                    <span className="">
+                      {formatDate(task.dueDate.toDate())}
+                    </span>
+                  </div>
                   <EditTaskModal task={task} />
                 </div>
               );
