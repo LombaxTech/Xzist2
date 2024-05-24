@@ -57,6 +57,7 @@ export default function Tasks() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedCustomerId, setSelectedCustomerId] = useState("All");
   const [selectedAssignedToId, setSelectedAssignedToId] = useState("All");
+  const [taskStatus, setTaskStatus] = useState("Incomplete");
 
   return (
     <SidebarPageLayout>
@@ -127,6 +128,18 @@ export default function Tasks() {
                 </select>
               </div>
             )}
+
+            <div className="flex flex-col gap-1">
+              <label className="">Complete</label>
+              <select
+                className="p-2 border"
+                onChange={(e) => setTaskStatus(e.target.value)}
+              >
+                <option>Incomplete</option>
+                <option>Complete</option>
+                <option>All</option>
+              </select>
+            </div>
           </div>
           <button
             className="btn btn-outline btn-sm mt-4"
@@ -162,12 +175,24 @@ export default function Tasks() {
               )
                 return null;
 
+              if (
+                taskStatus !== "All" &&
+                ((taskStatus === "Incomplete" && task.complete) ||
+                  (taskStatus === "Complete" && !task.complete))
+              )
+                return null;
+
               return (
                 <div
                   key={i}
                   className="p-2 shadow-md flex items-center border-l-primary border-l-8"
                 >
-                  <input disabled type="checkbox" className="mx-6" />
+                  <input
+                    disabled
+                    checked={task.complete}
+                    type="checkbox"
+                    className="mx-6"
+                  />
                   <div className="flex flex-col flex-1">
                     <span className="font-medium text-lg">
                       Todo: {task.title}
