@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { FaHome, FaTasks, FaTools, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { FaGear, FaGears, FaPencil } from "react-icons/fa6";
+import TasksReminder from "./TasksReminder";
 
 export default function Layout({ children }: { children: any }) {
   const { user, userLoading, userSetupComplete, signout } =
@@ -103,7 +104,10 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
 
       {/* CONTEXT V2 */}
       <div className="flex-1 bg-white flex flex-col">
-        <div className="flex flex-col flex-1 overflow-y-auto">{children}</div>
+        <div className="flex flex-col flex-1 overflow-y-auto">
+          <TasksReminder />
+          <div className="">{children}</div>
+        </div>
       </div>
     </div>
   );

@@ -97,3 +97,11 @@ export function isDateInPast(date: Date) {
   const today = new Date();
   return date < today;
 }
+
+export function getKeyForDayMonthYear(): string {
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
+  const year = currentDate.getFullYear();
+  return `${day}-${month}-${year}`;
+}
