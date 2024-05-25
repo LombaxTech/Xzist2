@@ -76,7 +76,6 @@ export default function CustomerPage() {
       <SidebarPageLayout>
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Customer Page</h1>
-          <AddCustomerNodeModal customerId={customerId as string} />
         </div>
         {/* TABLE OF CUSTOMER BASIC INFO */}
         <div className="overflow-x-auto mt-6 mb-6">
@@ -158,7 +157,10 @@ export default function CustomerPage() {
         )}
 
         {/* NOTES ON CUSTOMER */}
-        <h1 className="text-xl font-medium mt-4 mb-4">Notes</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-medium mt-4 mb-4">Notes</h1>
+          <AddCustomerNodeModal customerId={customerId as string} />
+        </div>
         <div className="flex flex-col gap-2">
           {notes &&
             notes.map((note: any, i: number) => {
