@@ -4,7 +4,13 @@ import SidebarPageLayout from "@/components/SidebarPageLayout";
 import Task from "@/components/Task";
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
-import { formatDate } from "@/lib/helperFunctions";
+import {
+  formatDate,
+  isDateInPast,
+  isInCurrentMonth,
+  isInCurrentWeek,
+  isToday,
+} from "@/lib/helperFunctions";
 import {
   collection,
   getDoc,
@@ -15,6 +21,8 @@ import {
   getDocs,
 } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
+
+const dueOptions = ["All", "Today", "This Week", "This Month", "Overdue"];
 
 export default function Tasks() {
   const { user } = useContext(AuthContext);
@@ -59,6 +67,9 @@ export default function Tasks() {
   const [selectedCustomerId, setSelectedCustomerId] = useState("All");
   const [selectedAssignedToId, setSelectedAssignedToId] = useState("All");
   const [taskStatus, setTaskStatus] = useState("Incomplete");
+  const [dueDate, setDueDate] = useState<
+    "All" | "Today" | "This Week" | "This Month" | "Overdue"
+  >("All");
 
   return (
     <SidebarPageLayout>
@@ -72,6 +83,7 @@ export default function Tasks() {
         <div className="p-4 w-[250px] shadow-md flex flex-col gap-2">
           <h2 className="text-xl font-medium">Filters</h2>
           <div className="flex flex-col gap-4 mt-4">
+            {/* BY CATEGORY */}
             {org && (
               <div className="flex flex-col gap-1">
                 <label className="">Category</label>
@@ -91,7 +103,7 @@ export default function Tasks() {
                 </select>
               </div>
             )}
-
+            {/* BY CUSTOMER */}
             <div className="flex flex-col gap-1">
               <label className="">Customer</label>
               <select
@@ -109,7 +121,7 @@ export default function Tasks() {
                   })}
               </select>
             </div>
-
+            {/* BY ASSIGNED TO  */}
             {org && (
               <div className="flex flex-col gap-1">
                 <label className="">Assigned To</label>
@@ -129,7 +141,7 @@ export default function Tasks() {
                 </select>
               </div>
             )}
-
+            {/* BY COMPLETE OR NOT */}
             <div className="flex flex-col gap-1">
               <label className="">Complete</label>
               <select
@@ -139,6 +151,19 @@ export default function Tasks() {
                 <option>Incomplete</option>
                 <option>Complete</option>
                 <option>All</option>
+              </select>
+            </div>
+            {/* BY DATE */}
+            <div className="flex flex-col gap-1">
+              <label className="">Due Date</label>
+              <select
+                className="p-2 border"
+                // @ts-ignore
+                onChange={(e) => setDueDate(e.target.value)}
+              >
+                {dueOptions.map((option: any, i: number) => (
+                  <option key={i}>{option}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -180,6 +205,17 @@ export default function Tasks() {
                 taskStatus !== "All" &&
                 ((taskStatus === "Incomplete" && task.complete) ||
                   (taskStatus === "Complete" && !task.complete))
+              )
+                return null;
+
+              let taskDueDate = new Date(task.dueDate.toDate());
+
+              if (
+                dueDate !== "All" &&
+                ((dueDate === "Overdue" && !isDateInPast) ||
+                  (dueDate === "Today" && !isToday(taskDueDate)) ||
+                  (dueDate === "This Week" && !isInCurrentWeek(taskDueDate)) ||
+                  (dueDate === "This Month" && !isInCurrentMonth(taskDueDate)))
               )
                 return null;
 

@@ -58,6 +58,42 @@ export function generatePassword(length: number): string {
   return password;
 }
 
-// Example usage:
-const password: string = generatePassword(12);
-console.log(password);
+export function isToday(date: Date) {
+  if (
+    new Date().getDate() === new Date(date).getDate() &&
+    new Date().getMonth() === new Date(date).getMonth()
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function isInCurrentWeek(date: Date) {
+  const today = new Date();
+  const startOfWeek = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() - today.getDay()
+  );
+  const endOfWeek = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + (6 - today.getDay())
+  );
+
+  return date >= startOfWeek && date <= endOfWeek;
+}
+
+export function isInCurrentMonth(date: Date) {
+  const today = new Date();
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  return date >= startOfMonth && date <= endOfMonth;
+}
+
+export function isDateInPast(date: Date) {
+  const today = new Date();
+  return date < today;
+}
