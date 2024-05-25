@@ -58,12 +58,23 @@ export default function CustomerPage() {
       });
 
       // GET TASKS
-      let tasksSnapshot = await getDocs(
-        query(collection(db, "tasks"), where("customer.id", "==", customerId))
+      onSnapshot(
+        query(collection(db, "tasks"), where("customer.id", "==", customerId)),
+        (tasksSnapshot) => {
+          let tasks: any = [];
+          tasksSnapshot.forEach((doc) =>
+            tasks.push({ id: doc.id, ...doc.data() })
+          );
+          setTasks(tasks);
+        }
       );
-      let tasks: any = [];
-      tasksSnapshot.forEach((doc) => tasks.push({ id: doc.id, ...doc.data() }));
-      setTasks(tasks);
+
+      // let tasksSnapshot = await getDocs(
+      //   query(collection(db, "tasks"), where("customer.id", "==", customerId))
+      // );
+      // let tasks: any = [];
+      // tasksSnapshot.forEach((doc) => tasks.push({ id: doc.id, ...doc.data() }));
+      // setTasks(tasks);
     };
 
     init();
