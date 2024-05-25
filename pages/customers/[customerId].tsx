@@ -1,5 +1,7 @@
 import AddCustomerNodeModal from "@/components/AddCustomerNoteModal";
+import CreateTaskModal from "@/components/CreateTaskModal";
 import SidebarPageLayout from "@/components/SidebarPageLayout";
+import Task from "@/components/Task";
 import { db } from "@/firebase";
 import { formatDate } from "@/lib/helperFunctions";
 import {
@@ -9,6 +11,7 @@ import {
   query,
   where,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,6 +26,7 @@ export default function CustomerPage() {
   const [customer, setCustomer] = useState<any>(null);
   const [notes, setNotes] = useState<any>([]);
   const [company, setCompany] = useState<any>(null);
+  const [tasks, setTasks] = useState<any>([]);
 
   useEffect(() => {
     if (!customerId) return;
@@ -52,6 +56,14 @@ export default function CustomerPage() {
         snapshot.forEach((doc) => notes.push({ id: doc.id, ...doc.data() }));
         setNotes(notes);
       });
+
+      // GET TASKS
+      let tasksSnapshot = await getDocs(
+        query(collection(db, "tasks"), where("customer.id", "==", customerId))
+      );
+      let tasks: any = [];
+      tasksSnapshot.forEach((doc) => tasks.push({ id: doc.id, ...doc.data() }));
+      setTasks(tasks);
     };
 
     init();
@@ -108,6 +120,20 @@ export default function CustomerPage() {
             )}
           </>
         )}
+
+        {/* TASKS */}
+        <div className="flex flex-col gap-2 my-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-xl font-medium">Tasks</h1>
+            <CreateTaskModal />
+          </div>
+
+          {tasks.length === 0 ? "No Tasks" : ""}
+          {tasks &&
+            tasks.map((task: any, i: number) => {
+              return <Task task={task} key={i} />;
+            })}
+        </div>
 
         {/* USERS INFO IF CUSTOMER IS COMPANY */}
         {isCompany && (
