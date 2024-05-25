@@ -1,3 +1,4 @@
+import { focusTaskIdAtom } from "@/atoms/taskAtoms";
 import CreateTaskModal from "@/components/CreateTaskModal";
 import EditTaskModal from "@/components/EditTaskModal";
 import SidebarPageLayout from "@/components/SidebarPageLayout";
@@ -20,6 +21,7 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
+import { useAtom } from "jotai";
 import React, { useContext, useEffect, useState } from "react";
 
 const dueOptions = ["All", "Today", "This Week", "This Month", "Overdue"];
@@ -70,6 +72,8 @@ export default function Tasks() {
   const [dueDate, setDueDate] = useState<
     "All" | "Today" | "This Week" | "This Month" | "Overdue"
   >("All");
+
+  const [focusTaskId, setFocusTaskId] = useAtom(focusTaskIdAtom);
 
   return (
     <SidebarPageLayout>
@@ -219,8 +223,19 @@ export default function Tasks() {
               )
                 return null;
 
+              if (focusTaskId && focusTaskId !== task.id) return null;
+
               return <Task task={task} key={i} />;
             })}
+
+          {focusTaskId && (
+            <h1
+              className="text-lg font-medium cursor-pointer underline"
+              onClick={() => setFocusTaskId("")}
+            >
+              Focus Mode is currently on. Turn it off?
+            </h1>
+          )}
         </div>
       </div>
     </SidebarPageLayout>

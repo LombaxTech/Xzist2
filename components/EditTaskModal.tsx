@@ -1,3 +1,4 @@
+import { focusTaskIdAtom } from "@/atoms/taskAtoms";
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebase";
 import {
@@ -16,7 +17,9 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { useAtom } from "jotai";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
 
 export default function EditTaskModal({ task }: { task: any }) {
   const { user } = useContext(AuthContext);
@@ -56,6 +59,7 @@ export default function EditTaskModal({ task }: { task: any }) {
   const [customerId, setCustomerId] = useState<any>(task.customer?.id);
   const [assignedToId, setAssignedToId] = useState<any>(task.assignedTo?.id);
   const [category, setCategory] = useState<any>(task.category);
+  const [focusTaskId, setFocusTaskId] = useAtom(focusTaskIdAtom);
 
   const saveChanges = async () => {
     let assignedTo = organisation.users.find((u: any) => u.id === assignedToId);
@@ -103,6 +107,11 @@ export default function EditTaskModal({ task }: { task: any }) {
 
   let isTaskComplete = task.complete ? true : false;
 
+  const focusOnTask = () => {
+    setFocusTaskId(task.id);
+    closeModal();
+  };
+
   return (
     <>
       <h3 className="cursor-pointer underline" onClick={openModal}>
@@ -145,6 +154,11 @@ export default function EditTaskModal({ task }: { task: any }) {
                     <h1 className="text-lg font-medium leading-6 text-gray-900">
                       Edit Task
                     </h1>
+                    <FaEye
+                      size={25}
+                      className="cursor-pointer"
+                      onClick={focusOnTask}
+                    />
                   </div>
 
                   <div className="flex flex-col gap-6 mt-4">
