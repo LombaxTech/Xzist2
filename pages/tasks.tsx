@@ -216,7 +216,7 @@ export default function Tasks() {
 
               if (
                 dueDate !== "All" &&
-                ((dueDate === "Overdue" && !isDateInPast) ||
+                ((dueDate === "Overdue" && !isDateInPast(taskDueDate)) ||
                   (dueDate === "Today" && !isToday(taskDueDate)) ||
                   (dueDate === "This Week" && !isInCurrentWeek(taskDueDate)) ||
                   (dueDate === "This Month" && !isInCurrentMonth(taskDueDate)))
