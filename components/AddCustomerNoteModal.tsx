@@ -4,6 +4,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { addDoc, collection } from "firebase/firestore";
 import { Fragment, useContext, useState } from "react";
 
+const noteTypes = ["General", "Call", "Email", "Face To Face", "Message"];
+
 export default function AddCustomerNodeModal({
   customerId,
 }: {
@@ -17,11 +19,12 @@ export default function AddCustomerNodeModal({
   const openModal = () => setIsOpen(true);
 
   const [text, setText] = useState("");
-  const [event, setEvent] = useState("");
+  const [type, setType] = useState("General");
 
   const createNote = async () => {
     const newNote = {
       text,
+      type,
       createdAt: new Date(),
       createdBy: {
         user: {
@@ -88,6 +91,22 @@ export default function AddCustomerNodeModal({
 
                   <div className="flex flex-col gap-6 mt-4">
                     <div className="flex flex-col gap-1">
+                      <label className="">Note Type </label>
+                      <select
+                        className="outline-none border-2 p-2 rounded-md"
+                        onChange={(e) => setType(e.target.value)}
+                      >
+                        {noteTypes.map((noteType: string, i: number) => {
+                          return (
+                            <option key={i} value={noteType}>
+                              {noteType}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="">Note Text </label>
                       <textarea
                         className="p-2 outline-none rounded-md border-2"
                         placeholder=""
