@@ -68,27 +68,31 @@ export function isToday(date: Date) {
     return false;
   }
 }
-
-export function isInCurrentWeek(date: Date) {
+export function isInCurrentWeek(date: Date): boolean {
   const today = new Date();
-  const startOfWeek = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() - today.getDay()
-  );
-  const endOfWeek = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + (6 - today.getDay())
-  );
+
+  // Set the start of the week (Sunday)
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  // Set the end of the week (Saturday)
+  const endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
+  endOfWeek.setHours(23, 59, 59, 999);
 
   return date >= startOfWeek && date <= endOfWeek;
 }
-
-export function isInCurrentMonth(date: Date) {
+export function isInCurrentMonth(date: Date): boolean {
   const today = new Date();
+
+  // Set the start of the month (first day of the month)
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  // Set the end of the month (last day of the month)
   const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  endOfMonth.setHours(23, 59, 59, 999);
 
   return date >= startOfMonth && date <= endOfMonth;
 }
