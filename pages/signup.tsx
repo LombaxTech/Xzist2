@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const provider = new GoogleAuthProvider();
 
@@ -19,7 +19,9 @@ export default function SignIn() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  router.push("/login");
+  useEffect(() => {
+    router.push("/login");
+  }, []);
 
   const signinWithGoogle = async () => {
     try {
