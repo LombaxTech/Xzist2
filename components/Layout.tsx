@@ -1,18 +1,11 @@
 import { AuthContext } from "@/context/AuthContext";
-import React, { useContext, useState } from "react";
-import Navbar from "./Navbar";
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaHome,
-  FaTasks,
-  FaTools,
-  FaUser,
-} from "react-icons/fa";
 import Link from "next/link";
-import { FaGear, FaGears, FaPencil } from "react-icons/fa6";
-import TasksReminder from "./TasksReminder";
 import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { FaArrowRight, FaChevronLeft, FaUser } from "react-icons/fa";
+import { FaGear, FaPencil } from "react-icons/fa6";
+import Navbar from "./Navbar";
+import TasksReminder from "./TasksReminder";
 
 export default function Layout({ children }: { children: any }) {
   const router = useRouter();
@@ -49,17 +42,18 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           collapsed ? "w-[100px]" : "w-[200px]"
         } bg-white border-r-2 flex flex-col`}
       >
-        <div className="border-b-2 flex justify-center items-center">
-          <Link href={"/"}>
-            {!collapsed && (
-              <h1 className="text-2xl font-bold text-center m-4">XZIST</h1>
-            )}
-          </Link>
+        <div className="flex justify-center items-center gap-6 p-4 border-b">
+          {!collapsed && (
+            <Link href={"/"}>
+              {/* <h1 className="text-2xl font-bold text-center m-4">XZIST</h1> */}
+              <img src={"/xzist-logo.jpg"} className="flex-1" />
+            </Link>
+          )}
           <div
-            className="cursor-pointer p-6"
+            className={`cursor-pointer  ${collapsed ? "" : ""}`}
             onClick={() => setCollapsed(!collapsed)}
           >
-            {collapsed ? <FaArrowRight /> : <FaArrowLeft />}
+            {collapsed ? <FaArrowRight /> : <FaChevronLeft />}
           </div>
         </div>
         <ul className="flex-1 overflow-y-auto">
