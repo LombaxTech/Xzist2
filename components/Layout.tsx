@@ -1,7 +1,14 @@
 import { AuthContext } from "@/context/AuthContext";
 import React, { useContext, useState } from "react";
 import Navbar from "./Navbar";
-import { FaHome, FaTasks, FaTools, FaUser } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaHome,
+  FaTasks,
+  FaTools,
+  FaUser,
+} from "react-icons/fa";
 import Link from "next/link";
 import { FaGear, FaGears, FaPencil } from "react-icons/fa6";
 import TasksReminder from "./TasksReminder";
@@ -32,15 +39,28 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
     useContext(AuthContext);
 
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="flex w-screen h-screen max-h-screen overflow-hidden">
       {/* SIDE BAR */}
-      <div className="max-h-screen w-[220px] bg-white border-r-2 flex flex-col">
-        <div className="border-b-2">
+      <div
+        className={`max-h-screen duration-200 ${
+          collapsed ? "w-[100px]" : "w-[200px]"
+        } bg-white border-r-2 flex flex-col`}
+      >
+        <div className="border-b-2 flex justify-center items-center">
           <Link href={"/"}>
-            <h1 className="text-2xl font-bold text-center m-4">XZIST</h1>
+            {!collapsed && (
+              <h1 className="text-2xl font-bold text-center m-4">XZIST</h1>
+            )}
           </Link>
+          <div
+            className="cursor-pointer p-6"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? <FaArrowRight /> : <FaArrowLeft />}
+          </div>
         </div>
         <ul className="flex-1 overflow-y-auto">
           {/* <Link
@@ -52,10 +72,12 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           </Link> */}
           <Link
             href={"/tasks"}
-            className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
+            className={`px-8 py-4 hover:bg-blue-200 flex items-center gap-4 ${
+              collapsed ? "flex justify-center" : ""
+            }`}
           >
             <FaPencil size={20} />
-            <span className="">Tasks</span>
+            {!collapsed && <span className="">Tasks</span>}
           </Link>
           <div
             className="flex flex-col"
@@ -64,10 +86,12 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           >
             <Link
               href={"/customers"}
-              className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
+              className={`px-8 py-4 hover:bg-blue-200 flex items-center gap-4 ${
+                collapsed ? "flex justify-center" : ""
+              }`}
             >
               <FaUser size={20} />
-              <span className="">Customers</span>
+              {!collapsed && <span className="">Customers</span>}
             </Link>
             {/* <div
               className={`pl-8 ${
@@ -92,10 +116,12 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           </div>
           <Link
             href={"/settings"}
-            className="px-8 py-4 hover:bg-blue-200 flex items-center gap-4"
+            className={`px-8 py-4 hover:bg-blue-200 flex items-center gap-4 ${
+              collapsed ? "flex justify-center" : ""
+            }`}
           >
             <FaGear size={20} />
-            <span className="">Settings</span>
+            {!collapsed && <span className="">Settings</span>}
           </Link>
         </ul>
 
