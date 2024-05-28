@@ -19,20 +19,7 @@ export default function SignIn() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    try {
-      let authUser = await signInWithEmailAndPassword(auth, email, password);
-      console.log("res of signin in ");
-      console.log(authUser);
-
-      setSuccess(true);
-    } catch (error) {
-      console.log(error);
-      setError("error");
-    }
-  };
+  router.push("/login");
 
   const signinWithGoogle = async () => {
     try {

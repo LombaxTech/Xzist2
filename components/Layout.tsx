@@ -5,8 +5,13 @@ import { FaHome, FaTasks, FaTools, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { FaGear, FaGears, FaPencil } from "react-icons/fa6";
 import TasksReminder from "./TasksReminder";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }: { children: any }) {
+  const router = useRouter();
+  const { pathname } = router;
+  const isLoginPage = pathname === "/login";
+
   const { user, userLoading, userSetupComplete, signout } =
     useContext(AuthContext);
 
@@ -16,8 +21,8 @@ export default function Layout({ children }: { children: any }) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="flex-1">{children}</div>
+      {isLoginPage ? null : <Navbar />}
+      <div className="flex-1 flex flex-col">{children}</div>
     </div>
   );
 }

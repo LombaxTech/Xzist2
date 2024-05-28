@@ -12,7 +12,7 @@ export default function App() {
 
   const router = useRouter();
 
-  if (!userLoading && !user) router.push("/signin");
+  if (!userLoading && !user) router.push("/login");
   if (!userLoading && user?.setup == false) return <SetupAccount />;
 
   return <div className="">home</div>;
