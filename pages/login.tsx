@@ -1,4 +1,5 @@
 import GoogleButton from "@/components/GoogleButton";
+import { AuthContext } from "@/context/AuthContext";
 import { auth } from "@/firebase";
 import {
   GoogleAuthProvider,
@@ -7,11 +8,18 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const provider = new GoogleAuthProvider();
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) router.push("/");
+  }, [user]);
+
   const [showSignIn, setShowSignIn] = useState(true);
 
   return (
