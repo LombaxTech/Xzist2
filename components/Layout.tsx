@@ -6,6 +6,8 @@ import { FaArrowRight, FaChevronLeft, FaUser } from "react-icons/fa";
 import { FaGear, FaPencil } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import TasksReminder from "./TasksReminder";
+import { useAtom } from "jotai";
+import { sidebarCollapsedAtom } from "@/atoms/sidebarCollapseAtom";
 
 export default function Layout({ children }: { children: any }) {
   const router = useRouter();
@@ -21,7 +23,7 @@ export default function Layout({ children }: { children: any }) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {isLoginPage ? null : <Navbar />}
+      {isLoginPage ? null : <Navbar showLogo />}
       <div className="flex-1 flex flex-col">{children}</div>
     </div>
   );
@@ -32,7 +34,9 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
     useContext(AuthContext);
 
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+
+  const [collapsed, setCollapsed] = useAtom(sidebarCollapsedAtom);
+  // const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="flex w-screen h-screen max-h-screen overflow-hidden">
@@ -42,19 +46,13 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
           collapsed ? "w-[100px]" : "w-[200px]"
         } bg-white border-r-2 flex flex-col`}
       >
-        <div className="flex justify-center items-center gap-6 p-4 border-b">
+        <div className={`p-4 px-8 ${collapsed ? "hidden" : "none"}`}>
           {!collapsed && (
             <Link href={"/"}>
               {/* <h1 className="text-2xl font-bold text-center m-4">XZIST</h1> */}
               <img src={"/xzist-logo.jpg"} className="flex-1" />
             </Link>
           )}
-          <div
-            className={`cursor-pointer  ${collapsed ? "" : ""}`}
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? <FaArrowRight /> : <FaChevronLeft />}
-          </div>
         </div>
         <ul className="flex-1 overflow-y-auto">
           {/* <Link
@@ -130,8 +128,11 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
       {/* CONTEXT V2 */}
       <div className="flex-1 bg-white flex flex-col">
         <div className="flex flex-col flex-1 overflow-y-auto">
-          <TasksReminder />
-          <div className="">{children}</div>
+          <Navbar showLogo={false} showCollapseIcon />
+          <div className="flex flex-col overflow-y-auto">
+            <TasksReminder />
+            <div className="">{children}</div>
+          </div>
         </div>
       </div>
     </div>

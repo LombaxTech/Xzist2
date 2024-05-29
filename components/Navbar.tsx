@@ -6,10 +6,19 @@ import React, { Fragment, useContext, useState } from "react";
 import GoogleButton from "./GoogleButton";
 import { useRouter } from "next/router";
 import { Dialog, Transition } from "@headlessui/react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useAtom } from "jotai";
+import { sidebarCollapsedAtom } from "@/atoms/sidebarCollapseAtom";
 
 const provider = new GoogleAuthProvider();
 
-export default function Navbar() {
+export default function Navbar({
+  showLogo,
+  showCollapseIcon,
+}: {
+  showLogo: boolean;
+  showCollapseIcon?: boolean;
+}) {
   const { user, userLoading, userSetupComplete } = useContext(AuthContext);
   const router = useRouter();
 
@@ -24,36 +33,26 @@ export default function Navbar() {
     }
   };
 
-  const signinWithGoogle = async () => {
-    try {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          console.log(result);
+  const [sidebarCollapsed, setSidebarCollapsed] = useAtom(sidebarCollapsedAtom);
 
-          router.push("/");
-        })
-        .catch((error) => {
-          console.log(error);
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   return (
-    <div className="p-4 flex items-center justify-between shadow-md">
-      <h1 className="font-bold italic">
-        <Link href={"/"}>XZIST</Link>
-      </h1>
+    <div
+      className={`p-4 flex items-center border-b-2 ${
+        showLogo || showCollapseIcon ? "justify-between" : "justify-end"
+      }`}
+    >
+      {showLogo && (
+        <h1 className="font-bold italic">
+          <Link href={"/"}>XZIST</Link>
+        </h1>
+      )}
+      {showCollapseIcon && (
+        <div className="cursor-pointer" onClick={toggleSidebar}>
+          {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </div>
+      )}
       <ul className="flex items-center gap-4">
         {!user && (
           <Link href={"signin"}>
