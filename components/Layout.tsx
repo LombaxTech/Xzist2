@@ -44,7 +44,7 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
       <div
         className={`max-h-screen duration-200 ${
           collapsed ? "w-[100px]" : "w-[200px]"
-        } bg-white border-r-2 flex flex-col`}
+        } bg-white border-r flex flex-col`}
       >
         <div className={`p-4 px-8 ${collapsed ? "hidden" : "none"}`}>
           {!collapsed && (
@@ -118,7 +118,7 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
         </ul>
 
         <div
-          className="px-8 py-4 cursor-pointer text-center font-medium border-t-2"
+          className="px-8 py-4 cursor-pointer text-center font-medium border-t"
           onClick={signout}
         >
           Sign Out
@@ -128,11 +128,9 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
       {/* CONTEXT V2 */}
       <div className="flex-1 bg-white flex flex-col">
         <div className="flex flex-col flex-1 overflow-y-auto">
+          <TasksReminder />
           <Navbar showLogo={false} showCollapseIcon />
-          <div className="flex flex-col overflow-y-auto">
-            <TasksReminder />
-            <div className="">{children}</div>
-          </div>
+          <div className="flex flex-col overflow-y-auto">{children}</div>
         </div>
       </div>
     </div>

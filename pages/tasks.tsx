@@ -84,7 +84,7 @@ export default function Tasks() {
 
       <div className="flex gap-4 mt-8">
         {/* FILTERS */}
-        <div className="p-4 w-[250px] shadow-md flex flex-col gap-2">
+        <div className="p-4 w-[250px] bg-white shadow-md flex flex-col gap-2">
           <h2 className="text-xl font-medium">Filters</h2>
           <div className="flex flex-col gap-4 mt-4">
             {/* BY CATEGORY */}

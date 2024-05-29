@@ -63,7 +63,7 @@ export default function CustomersHome() {
           />
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-white p-4 shadow-md">
         <table className="table">
           <thead>
             <tr>

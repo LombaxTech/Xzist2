@@ -89,7 +89,7 @@ export default function CustomerPage() {
           <h1 className="text-2xl font-bold">Customer Page</h1>
         </div>
         {/* TABLE OF CUSTOMER BASIC INFO */}
-        <div className="overflow-x-auto mt-6 mb-6">
+        <div className="overflow-x-auto mt-6 mb-6  p-4 bg-white shadow-md">
           <table className="table">
             <thead>
               <tr>
@@ -116,7 +116,7 @@ export default function CustomerPage() {
         {!isCompany && (
           <>
             {company ? (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 p-4 bg-white shadow-md">
                 <h1 className="text-xl font-medium">Company Name:</h1>
                 <Link href={`/customers/${company.id}`}>
                   <span className="flex items-center gap-2">

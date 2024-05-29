@@ -39,7 +39,7 @@ export default function Navbar({
 
   return (
     <div
-      className={`p-4 flex items-center border-b-2 ${
+      className={`p-4 flex items-center border-b ${
         showLogo || showCollapseIcon ? "justify-between" : "justify-end"
       }`}
     >

@@ -77,7 +77,7 @@ const TasksSettings = () => {
 
   if (organisation)
     return (
-      <div className="flex flex-col gap-4 w-4/12 mt-8">
+      <div className="bg-white p-4 shadow-md flex flex-col gap-4 w-4/12 mt-8">
         <h2 className="text-xl font-medium">Task Categories</h2>
 
         <ul className="">
@@ -131,7 +131,7 @@ const OrganisationSettings = () => {
 
   if (user && organisation)
     return (
-      <div className="flex flex-col gap-4 w-4/12 mt-8">
+      <div className="bg-white p-4 shadow-md flex flex-col gap-4 w-4/12 mt-8">
         <h2 className="text-xl font-medium">Organisation</h2>
 
         <div className="flex items-center gap-2">

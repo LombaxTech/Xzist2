@@ -4,7 +4,7 @@ import EditTaskModal from "./EditTaskModal";
 
 export default function Task({ task }: { task: any }) {
   return (
-    <div className="p-2 shadow-md flex items-center border-l-primary border-l-8">
+    <div className="p-2 bg-white shadow-sm flex items-center border border-l-primary border-l-8">
       <input
         disabled
         checked={task.complete}
