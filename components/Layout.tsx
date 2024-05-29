@@ -130,7 +130,9 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
         <div className="flex flex-col flex-1 overflow-y-auto">
           <TasksReminder />
           <Navbar showLogo={false} showCollapseIcon />
-          <div className="flex flex-col overflow-y-auto">{children}</div>
+          <div className="flex flex-col overflow-y-auto text-[#666666]">
+            {children}
+          </div>
         </div>
       </div>
     </div>
