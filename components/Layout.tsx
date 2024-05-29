@@ -1,13 +1,13 @@
+import { sidebarCollapsedAtom } from "@/atoms/sidebarCollapseAtom";
 import { AuthContext } from "@/context/AuthContext";
+import { useAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { FaArrowRight, FaChevronLeft, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { FaGear, FaPencil } from "react-icons/fa6";
 import Navbar from "./Navbar";
 import TasksReminder from "./TasksReminder";
-import { useAtom } from "jotai";
-import { sidebarCollapsedAtom } from "@/atoms/sidebarCollapseAtom";
 
 export default function Layout({ children }: { children: any }) {
   const router = useRouter();
@@ -130,9 +130,7 @@ const UserSetupCompleteLayout = ({ children }: { children: any }) => {
         <div className="flex flex-col flex-1 overflow-y-auto">
           <TasksReminder />
           <Navbar showLogo={false} showCollapseIcon />
-          <div className="flex flex-col overflow-y-auto text-[#666666]">
-            {children}
-          </div>
+          <div className="flex flex-col overflow-y-auto">{children}</div>
         </div>
       </div>
     </div>
