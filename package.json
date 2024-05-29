@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
+    "@next/font": "^14.2.3",
     "firebase": "^10.7.1",
     "jotai": "^2.8.1",
     "next": "14.0.4",
